@@ -1,0 +1,201 @@
+﻿<Window x:Class="Notepad__.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Notepad__" 
+        d:DataContext="{d:DesignInstance Type=local:FileData}"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="781.2" Width="1045.6" Background="{x:Null}">
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="New" Executed="NewFile"/>
+        <CommandBinding Command="Open" Executed="OpenFile"/>
+        <CommandBinding Command="Save" Executed="SaveFile"/>
+        <CommandBinding Command="SaveAs" Executed="SaveAsFile"/>
+        <CommandBinding Command="Close" Executed="Exit"/>
+        <CommandBinding Command="Find" Executed="Find"/>
+        <CommandBinding Command="Replace" Executed="Replace"/>
+        <CommandBinding Command="Help" Executed="About"/>
+    </Window.CommandBindings>
+    
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="New"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="Open"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="Save"/>
+        <KeyBinding Key="S" Modifiers="Ctrl+Alt" Command="SaveAs"/>
+        <KeyBinding Key="E" Modifiers="Ctrl" Command="Close"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="Find"/>
+        <KeyBinding Key="H" Modifiers="Ctrl" Command="Replace"/>
+        <KeyBinding Key="A" Modifiers="Ctrl" Command="Help"/>
+    </Window.InputBindings>
+    
+    <Grid Name="Grid" ShowGridLines="False" RenderTransformOrigin="0.5,0.5">
+        <Grid.Background>
+            <ImageBrush ImageSource="about-image.jpg" Stretch="UniformToFill" >
+                <ImageBrush.RelativeTransform>
+                    <TransformGroup>
+                        <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                        <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                        <RotateTransform Angle="180" CenterY="0.5" CenterX="0.5"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </ImageBrush.RelativeTransform>
+            </ImageBrush>
+        </Grid.Background>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TreeView Name="myTreeView" FontSize="18" TreeViewItem.Selected="MyTreeView_Selected" Margin="0,0,0,0.2" Grid.Row="1" >
+            <TreeView.Background>
+                <ImageBrush ImageSource="mainwindow.jpg" Stretch="UniformToFill">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="5" CenterX="5"/>
+                            <SkewTransform CenterY="5" CenterX="5"/>
+                            <RotateTransform CenterY="5" CenterX="5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </TreeView.Background>
+        </TreeView>
+
+        <TabControl Name="tabControl" ItemsSource="{Binding ListForFiles}" BorderBrush="{x:Null}" Background="{x:Null}" 
+                    Margin="0,0.4,-0.4,0.2" Grid.Row="1" Grid.Column="1">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <TextBlock FontSize="18" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button  Width="25" Height="25" VerticalContentAlignment="Top" Visibility="Visible" BorderThickness="0" 
+                                 Opacity="0.7" HorizontalContentAlignment="Stretch" FlowDirection="LeftToRight" OpacityMask="Black" 
+                                 Click="Close_Clicked">
+                            <Button.Background>
+                                <ImageBrush ImageSource="icon-close.png"/>
+                            </Button.Background>
+                        </Button>
+                    </WrapPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate >
+                    <TextBox TextWrapping="Wrap" FontSize="18" AcceptsReturn="True" TextChanged="TextBox_TextChanged"
+                             Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             Mouse.MouseMove="TextBox_MouseMove">
+                    </TextBox>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+
+        <Menu Grid.ColumnSpan="2" Width="Auto" Margin="0,0,799.6,0.2">
+            <Menu.Background>
+                <ImageBrush ImageSource="image.jpg" Stretch="UniformToFill">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                            <RotateTransform Angle="-180" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </Menu.Background>
+            <MenuItem Header="File"  FontSize="28" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Height="60">
+                <MenuItem Header="New" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="New" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="Open"  FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Open" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="Save" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Save" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Save as" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="SaveAs" InputGestureText="Ctrl+Alt+S"/>
+                <MenuItem Header="Exit" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Close" InputGestureText="Ctrl+E"/>
+            </MenuItem>
+            <MenuItem Header="Search"  FontSize="28" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Height="60">
+                <MenuItem Header="Find" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Find" InputGestureText="Ctrl+F"/>
+                <MenuItem Header="Replace" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Replace" InputGestureText="Ctrl+H"/>
+                <MenuItem Header="Replace all" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Replace" InputGestureText="Ctrl+H"/>
+            </MenuItem>
+            <MenuItem Header="Help"  FontSize="28" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Height="55" Width="77">
+                <MenuItem Header="About" FontSize="24" Background="#FFE6E2F1" BorderBrush= "#FFE6E2F1" Command="Help" InputGestureText="Ctrl+A"/>
+            </MenuItem>
+        </Menu>
+
+        <Button x:Name="nextButton" Grid.Column="1" HorizontalAlignment="Left" Height="41" Margin="823,4,0,0" 
+                VerticalAlignment="Top" Width="57" BorderBrush="{x:Null}" Click="Next_Clicked" ToolTip="Find next">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-next-arrow.png"/>
+            </Button.Background>
+
+        </Button>
+
+        <Button x:Name="previousButton" Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="768,0,0,0" 
+                VerticalAlignment="Top" Width="55" BorderBrush="{x:Null}" Click="Previous_Clicked" ToolTip="Find previous">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-previous-arrow.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="uppercase" Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="672,4,0,0" 
+                VerticalAlignment="Top" Width="41" BorderBrush="{x:Null}" Click="Button_Clicked" ToolTip="Uppercase">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-uppercase.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="lowercase" Grid.Column="1" HorizontalAlignment="Left" Height="35" Margin="713,16,0,0" 
+                VerticalAlignment="Top" Width="42" BorderBrush="{x:Null}" Click="Button_Clicked" ToolTip="Lowercase">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-lowercase.png" Stretch="UniformToFill"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="cut" Grid.Column="1" HorizontalAlignment="Left" Height="37" Margin="524,10,0,0" 
+                VerticalAlignment="Top" Width="34" BorderBrush="{x:Null}" Click="Button_Clicked" ToolTip="Cut">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-cut.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="copy" Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="566,0,0,0" 
+                VerticalAlignment="Top" Width="41" BorderBrush="{x:Null}" Click="Button_Clicked" ToolTip="Copy">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-copy.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="paste" Grid.Column="1" HorizontalAlignment="Left" Height="56" Margin="612,0,0,0" 
+                VerticalAlignment="Top" Width="55" BorderBrush="{x:Null}" Click="Button_Clicked" Grid.RowSpan="2" ToolTip="Paste">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-paste.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="removeEmptyLines" Grid.Column="1" HorizontalAlignment="Left" Height="41" Margin="466,6,0,0" 
+                VerticalAlignment="Top" Width="44" BorderBrush="{x:Null}" Click="Button_Clicked" ToolTip="Remove empty lines">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-remove-empty-lines.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="readOnly" Grid.Column="1" HorizontalAlignment="Left" Height="35" Margin="414,10,0,0" 
+                VerticalAlignment="Top" Width="38" BorderBrush="{x:Null}" Click="Button_Clicked" ToolTip="Read only">
+            <Button.Background>
+                <ImageBrush ImageSource="icon-read-only.png"/>
+            </Button.Background>
+        </Button>
+        
+        <TextBox x:Name="goToLine" Grid.Column="1" HorizontalAlignment="Left" Height="37" Margin="358,8,0,0" TextWrapping="Wrap"  
+                 VerticalAlignment="Top" Width="42" Background="{x:Null}" BorderBrush="#FF0B0B0C" FontSize="22" TextChanged="GoToLine_TextChanged"/>
+        
+        <Label Content="Go to line:" Grid.Column="1" HorizontalAlignment="Left" Height="39" Margin="236,6,0,0" 
+               VerticalAlignment="Top" Width="122" FontSize="24"/>
+
+    </Grid>
+</Window>
